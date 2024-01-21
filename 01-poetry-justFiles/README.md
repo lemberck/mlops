@@ -17,7 +17,7 @@
    - Implement `if __name__ == '__main__':` to ensure execution only when the script is called directly, not when imported as a module.
 
 4. **Automation with Justfile:**
-   - Create a Justfile with a rule named `analyze` that runs the `analyze_data.py` script.
+   - Create a Justfile with a rule named `analyze` that runs the `analyze_sales.py` script.
 
 5. **Code Documentation:**
    - Adequately document the code, including explanatory comments.
