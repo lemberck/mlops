@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "01-poetry-justfiles"
+version = "0.1.0"
+description = "exercise poetry and just file for python script"
+authors = ["lemberck <blemberck@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

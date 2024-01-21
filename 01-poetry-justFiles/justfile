@@ -1,0 +1,2 @@
+analyze:
+    poetry run python analyze_sales.py
