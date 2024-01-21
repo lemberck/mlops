@@ -1,6 +1,6 @@
-# "Sales Data Analysis Script with  Python Pandas and Justfile Automation"**
+# "Sales Data Analysis Script with  Python Pandas and Justfile Automation"
 
-### Script: `analyze_data.py`
+### Script: `analyze_sales.py`
 
 ### Data : 'sales_data.csv'
 
