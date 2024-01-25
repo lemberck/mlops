@@ -1,1 +1,0 @@
-# This script includes database table schemas using ORM??? (like sql Alchemy)
