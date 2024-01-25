@@ -47,7 +47,7 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 ## Using the App
 
 > Note: Change *name*, *pasword* and *text* as desired. 
-### Navigate to prd-scripts, then:
+### Navigate to /prd-scripts, then:
 
 #### Initiate App
 
