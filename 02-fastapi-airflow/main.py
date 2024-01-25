@@ -13,6 +13,10 @@ from auth import authenticate_user
 # Initialize FastAPI application
 app = FastAPI()
 
+# Call the function to set up the database
+# This ensures that tables are created before the application starts serving requests.
+setup_database()
+
 @app.post("/predict_with_auth/", response_model=Prediction)
 def predict(text: Text, name: str = Header(None), password: str = Header(None)):
     """
@@ -102,5 +106,5 @@ def create_user(user: User):
     return {"message": "User created successfully"}
 
 if __name__ == "__main__":
-    setup_database()  # Set up database tables
+    # setup_database()  # Set up database tables ## This is not executed when app is run with 'uvicorn main:app --reload'
     uvicorn.run(app, host="0.0.0.0", port=8000)

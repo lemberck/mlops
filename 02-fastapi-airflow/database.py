@@ -15,11 +15,11 @@ def create_tables(cursor):
     # Create a table for texts
     cursor.execute(
         """
-        CREATE TABLE IF NOT EXISTS textos (
+        CREATE TABLE IF NOT EXISTS texts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            texto TEXT NOT NULL,
-            classificacao TEXT NOT NULL
+            name TEXT NOT NULL,
+            text TEXT NOT NULL,
+            classification TEXT NOT NULL
         );
         """
     )
@@ -27,10 +27,10 @@ def create_tables(cursor):
     # Create a table for users with name and password
     cursor.execute(
         """
-        CREATE TABLE IF NOT EXISTS usuarios (
+        CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            senha TEXT NOT NULL
+            name TEXT NOT NULL,
+            password TEXT NOT NULL
         );
         """
     )
