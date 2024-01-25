@@ -8,6 +8,7 @@ This project is a sentiment analysis application developed using FastAPI, a mode
 
 - `pyproject.toml`: Contains Poetry dependency configurations.
 - `main.py`: The entry point of the FastAPI application.
+- `auth.py` : Holds the function to authenticate a user.
 - `database.py`: Manages database operations, including connection and schema definitions.
 - `models.py`: Defines Pydantic models for request and response data structures.
 - `sentiment_analysis.py`: Implements the sentiment analysis functionality using Hugging Face's `transformers`.
@@ -43,18 +44,27 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 - `GET /texts`: Retrieve all texts submitted by an authenticated user.
 
 
-## cURL for Testing
+## Using the App
 
-> Note: Change *user_name*, *user_pasword* and *text* as needed. 
+> Note: Change *name*, *pasword* and *text* as desired. 
+### Navigate to prd-scripts, then:
 
-- Create User:
+#### Initiate App
 
-```bash
-curl -X POST "http://127.0.0.1:8000/create_user/" -H "Content-Type: application/json" -d '{"name": "user_name", "password": "user_password"}'
-```
+`just start-app`
 
-- Obtain Prediction:
+#### Create User:
 
-```bash
-curl -X POST "http://127.0.0.1:8000/prediction_with_auth/" -H "Content-Type: application/json" -H "name: user_name" -H "password: user_password" -d '{"text": "This course is very good"}'
-```
+`just create-user name='your-user-here' password='your-password-here' `
+
+#### Obtain Prediction:
+
+`just classify-text name='default_user_name' password='default_user_password' text='Your text here'`
+
+#### Get list of registered users
+
+`just get-users`
+
+#### Get list of texts sent by a registered user
+
+`just get-texts name='' password=''`
