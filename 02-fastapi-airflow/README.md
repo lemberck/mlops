@@ -34,7 +34,8 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 ## Setup and Installation
 
 - Install only dependencies using Poetry: `poetry install --no-root`
-- Run the application: `uvicorn main:app --reload`
+- Run the application: `uvicorn main:app --reload` 
+    - *Just* also available - see below 
 
 ## Endpoints
 
@@ -44,9 +45,9 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 - `GET /texts`: Retrieve all texts submitted by an authenticated user.
 
 
-## Using the App
+## Using the App (Just Runner required)
 
-> Note: Change *name*, *pasword* and *text* as desired. 
+> Note: Change *name*, *password* and *text* as desired. 
 ### Navigate to /prd-scripts, then:
 
 #### Initiate App
