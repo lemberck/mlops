@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "fastapi-project"
+version = "0.1.0"
+description = "API to provide sentiment analysis of text inputs using Huggingfaces's transformers pipeline, with user authentication and data storage in SQLite database."
+authors = ["lemberck <blemberck@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = {version = "^2.1.2+cpu", source = "pytorch"}
+torchvision = {version = "^0.16.2+cpu", source = "pytorch"}
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0"
+pydantic = "^2.5.3"
+transformers = "^4.37.1"
+
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
