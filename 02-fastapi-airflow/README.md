@@ -11,13 +11,12 @@ This project is a sentiment analysis application developed using FastAPI, a mode
 - `database.py`: Manages database operations, including connection and schema definitions.
 - `models.py`: Defines Pydantic models for request and response data structures.
 - `sentiment_analysis.py`: Implements the sentiment analysis functionality using Hugging Face's `transformers`.
-- `schemas.py`: Contains schemas for serialization and data validation.
 
 ## Features
 
 - **Sentiment Analysis**: Leverages a pre-trained model from Hugging Face's `transformers` library for sentiment analysis.
 - **User Authentication**: Supports user authentication to access and perform sentiment analysis.
-- **Database Integration**: Utilizes SQLite for storing user information and text analysis results.
+- **Database Integration**: Uses SQLite for storing user information and text analysis results.
 - **RESTful API Endpoints**: Offers API endpoints for user registration, authentication, text submission, and sentiment analysis.
 
 ## Usage
@@ -27,22 +26,26 @@ This project is a sentiment analysis application developed using FastAPI, a mode
 3. **Sentiment Analysis**: The submitted text is analyzed, and the sentiment is classified.
 4. **Data Storage**: The text and its sentiment analysis result are stored in the database.
 
+## API documentation
+With the application running, access ```http://127.0.0.1:8000/docs```  or  ```http://127.0.0.1:8000/redoc```
+
+
 ## Setup and Installation
 
-- Install dependencies using Poetry: `poetry install`
+- Install only dependencies using Poetry: `poetry install --no-root`
 - Run the application: `uvicorn main:app --reload`
 
 ## Endpoints
 
-- `POST /criar_usuario/`: Create a new user.
-- `POST /predicao_com_auth/`: Submit a text for sentiment analysis with user authentication.
-- `GET /textos`: Retrieve all texts submitted by an authenticated user.
-
+- `POST /create_user/`: Create a new user.
+- `POST /prediction_with_auth/`: Submit a text for sentiment analysis with user authentication.
+- `GET /users`: Retrieve all authenticated users.
+- `GET /texts`: Retrieve all texts submitted by an authenticated user.
 
 
 ## cURL for Testing
 
-> Note: Change *user_name* and *user_pasword* as needed. 
+> Note: Change *user_name*, *user_pasword* and *text* as needed. 
 
 - Create User:
 
