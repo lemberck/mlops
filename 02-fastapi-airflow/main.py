@@ -17,7 +17,7 @@ app = FastAPI()
 # This ensures that tables are created before the application starts serving requests.
 setup_database()
 
-@app.post("/predict_with_auth/", response_model=Prediction)
+@app.post("/prediction_with_auth/", response_model=Prediction)
 def predict(text: Text, name: str = Header(None), password: str = Header(None)):
     """
     Perform sentiment prediction with authentication.
