@@ -59,7 +59,7 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 
 #### Obtain Prediction:
 
-`just classify-text name='default_user_name' password='default_user_password' text='Your text here'`
+`just classify-text name='your-user-here' password='your-password-here' text='Your text here'`
 
 #### Get list of registered users
 
@@ -67,4 +67,4 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 
 #### Get list of texts sent by a registered user
 
-`just get-texts name='' password=''`
+`just get-texts name='your-user-here' password='your-password-here'`
