@@ -54,28 +54,28 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 
 `just start-app`
 
-![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/01.png)
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi/img/01.png)
 
 #### Create User:
 
 `just create-user name='your-user-here' password='your-password-here'`
 
-![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/02.png)
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi/img/02.png)
 
 #### Obtain Prediction:
 
 `just classify-text name='your-user-here' password='your-password-here' text='Your text here'`
 
-![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/03.png)
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi/img/03.png)
 
 #### Get list of registered users
 
 `just get-users`
 
-![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/04.png)
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi/img/04.png)
 
 #### Get list of texts sent by a registered user
 
 `just get-texts name='your-user-here' password='your-password-here'`
 
-![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/05.png)
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi/img/05.png)
