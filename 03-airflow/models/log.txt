@@ -1,0 +1,4 @@
+{"error_timestamp": "2024-01-26:22-11-43", "detail": "[Errno 2] No such file or directory: 'DEV-FORCING-ERROR-NO-MODEL-SHOULD-BE-CREATED/opt/airflow/models/log.txt'"}
+{"model_hash": "03d41d52ee461c47a6c2b97a08acfbd0", "model_filename": "model_2024-01-26:22-13-24_03d41d52ee461c47a6c2b97a08acfbd0.pkl", "training_timestamp": "2024-01-26:22-13-24", "environment": "dev"}
+{"error_timestamp": "2024-01-26:22-25-32", "detail": "[Errno 2] No such file or directory: 'PRD-FORCE-ERROR-NO-MODEL-SHOULD-BE-CREATED/opt/airflow/models/log.txt'"}
+{"model_hash": "03d41d52ee461c47a6c2b97a08acfbd0", "model_filename": "model_2024-01-26:22-26-27_03d41d52ee461c47a6c2b97a08acfbd0.pkl", "training_timestamp": "2024-01-26:22-26-27", "environment": "prd"}
