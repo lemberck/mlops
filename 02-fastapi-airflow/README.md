@@ -54,7 +54,7 @@ With the application running, access ```http://127.0.0.1:8000/docs```  or  ```ht
 
 `just start-app`
 
-[!https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/01.png]
+![Example image](https://github.com/lemberck/mlops-study/blob/main/02-fastapi-airflow/img/01.png)
 
 #### Create User:
 
