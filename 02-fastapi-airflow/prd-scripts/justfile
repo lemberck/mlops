@@ -10,7 +10,7 @@ create-user name='your-user-here' password='your-password-here':
         -d "{\"name\": \"{{name}}\", \"password\": \"{{password}}\"}"
 
 # Command to obtain a prediction. This command takes the user's name, password, and the text for sentiment analysis as parameters.
-classify-text name='your-user-here' password='your-user-here' text='Your text here':
+classify-text name='your-user-here' password='your-password-here' text='Your text here':
     curl -X POST "http://127.0.0.1:8000/prediction_with_auth/" \
         -H "Content-Type: application/json" \
         -H "name: {{name}}" -H "password: {{password}}" \
@@ -21,5 +21,5 @@ get-users:
     curl -X GET "http://127.0.0.1:8000/users"
 
 # Command to get the list of texts for an authenticated user with user name and password as parameters.
-get-texts name='your-user-here' password='your-user-here':
+get-texts name='your-user-here' password='your-password-here':
     curl -X GET "http://127.0.0.1:8000/texts" -H "name: {{name}}" -H "password: {{password}}"
