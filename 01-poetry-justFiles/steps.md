@@ -1,5 +1,17 @@
 # Steps
 
+### Install Poetry
+- Install poetry (Ubuntu - terminal)
+ - `curl -sSL https://install.python-poetry.org | python3 -`
+
+- Add to Path
+    - `echo "export PATH=\"$HOME/.local/bin:$PATH\"" >> $HOME/.profile`
+    - `source $HOME/.profile`
+
+- Check installation
+    - `poetry --version`
+
+### Initiate Poetry for the project
 -  Start poetry for the project (needed only once) --> add a description, press enter to skip the others :
 
     - `poetry init`
@@ -35,6 +47,12 @@
 
     - ctrl+D to exit python
     - ctrl+D to exit poetry
+
+### Install just
+- Install just (Ubuntu - terminal)
+    - `sudo apt install just`
+    - Note: You must have the Prebuilt-MPR set up on your system in order to run this command.
+
 
 -  Create the justfile with 'analyze' rule that runs the script using poetry
 
