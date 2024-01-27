@@ -18,7 +18,7 @@ default_args = {
 
 def dag_model_inference():
     
-    ################ Task to generate inference data
+    ################ Task to generate raw inference data
     @task.virtualenv(
         task_id="generate_inf_data",
         requirements=["pandas"],
@@ -37,14 +37,35 @@ def dag_model_inference():
 
         df = pd.DataFrame(
             {"feature1": range(20), "feature2": range(20, 40)}
-        )
-        df["feature1"] = df["feature1"] * 2
-
+            )
+        
         # Filename with timestamp
         csv_filename = f"/tmp/data_inf_{inference_timestamp}.csv"
 
         df.to_csv(csv_filename, index=False)
         return csv_filename
+    
+    ################ Task to preprocess the generated  inference data as done in training phase
+    @task.virtualenv(
+        task_id="preprocess_inf_data",
+        requirements=["pandas"],
+        system_site_packages=False,
+    )
+    def preprocessing(csv_path: str):
+        """Function to preprocess the generated inference data.
+
+        Args:
+            csv_path (str): Path to the raw data CSV file.
+
+        Returns:
+            str: Path to the preprocessed data CSV file.
+        """
+        import pandas as pd
+        df = pd.read_csv(csv_path)
+        df["feature1"] = df["feature1"] * 2
+        preprocessed_csv_filename = csv_path.replace("raw", "preprocessed")
+        df.to_csv(preprocessed_csv_filename, index=False)
+        return preprocessed_csv_filename
 
     ################ Task to execute model inference
     @task.virtualenv(
@@ -116,7 +137,8 @@ def dag_model_inference():
             raise
 
 
-    generate_data_op = generate_inf_data()
-    inference_op = inference(generate_data_op)
+    raw_data_op = generate_inf_data()
+    preprocess_data_op = preprocessing(raw_data_op)
+    inference_op = inference(preprocess_data_op)
 
 dag_model_inference_instance = dag_model_inference()
