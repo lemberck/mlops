@@ -43,11 +43,26 @@ Frontend : streamlit_app.py
     - `docker push lemberck/sentiment-analysis-mlops:backend-latest`
     - `docker push lemberck/sentiment-analysis-mlops:frontend-latest`
 
-### Create deployment manifest (YAML file) for both frontend and backend
+### Create deployment manifests (YAML file) for both frontend and backend, and also the namespace.
+- create-namespace.yaml
 - frontend-deployment.yaml 
 - backend-deployment.yaml
 - dev_... are just the commented ones
 
+### Create services manifests
+- backend-clusterip-service.yaml
+- frontend-loadbalancer.yaml
+- dev_... are just the commented ones
+
+### Create the namespace
+- 
+
+### Run the Deployments
+- Start minikube : `minikube start`
+- Create the namespace : `kubectl apply -f create-namespace.yaml`
+- Apply the Deployments : `kubectl apply -f backend/backend-deployment.yaml && kubectl apply -f frontend/frontend-deployment.yaml`
+    - Note: Takes about 30 secs to 1 minute for the pods to be ready.
+- Check the deployments : `kubectl get deployments -n sentiment-analysis-mlops`
 
  
 

@@ -4,7 +4,7 @@ kind: Deployment # Specifies the kind of resource you want to create
 
 metadata:
   name: frontend-deployment # Name of the deployment
-  namespace: sentiment-analysis-service # Namespace in which the deployment is created
+  namespace: sentiment-analysis-mlops # Namespace in which the deployment is created
   labels:
     app: frontend-app # Labels for the deployment
 
@@ -13,12 +13,12 @@ spec:
 
   selector:
     matchLabels:
-      env: production # Selects the template with matching labels
+      env: production-frontend # Selects the template with matching labels
 
   template: # Template for the pods that will be created
     metadata:
       labels:
-        env: production # Labels for the pods to match the selector
+        env: production-frontend # Labels for the pods to match the selector
         
     spec: # The specification to define the containers the pods will run
       containers:

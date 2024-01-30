@@ -1,0 +1,32 @@
+apiVersion: v1 # Specifies the version of the Kubernetes API
+
+kind: Service # Indicates that this is a Service resource.
+
+metadata:
+  name: frontend-service-loadbalancer # The name of the service, used to reference it within Kubernetes.
+  namespace: sentiment-analysis-mlops # The namespace where this service will be deployed.
+
+spec: # Defines the behavior of the service.
+  selector:
+    env: production-frontend # Selects pods with the label 'env: production-frontend' to route traffic to (check frontend-deployment.yaml)
+  
+  ports: # Specifies the network ports that the service will expose.
+    - protocol: TCP # The protocol used by the port (TCP in this case).
+      port: 80 # The external port that the service will be accessed on.
+      targetPort: 8501 # The port on the pod to which the traffic will be forwarded. (check frontend-deployment.yaml)
+  
+  type: LoadBalancer # The type of service, which in this case is LoadBalancer. This exposes the service externally and provides an external IP address.
+
+
+##########
+# The frontend-service.yaml manifest defines a Kubernetes Service for the Streamlit frontend application, 
+# enabling external access to the app through a LoadBalancer type service. This setup provides an externally
+#  accessible IP address, allowing users to interact with the Streamlit UI over the internet. The service 
+#  routes incoming traffic on port 80 (the standard HTTP port) to port 8501, where the Streamlit application 
+#  is listening within the frontend pods (see frontend-deployment.yaml). This is achieved by matching the 
+#  pods using a selector based on their labels (env: production-frontend). The use of a LoadBalancer service is particularly 
+#  suited for user-facing applications like Streamlit, as it facilitates direct access from outside the Kubernetes cluster.
+
+# Once the service is created and the LoadBalancer is provisioned, it will be able to access your Streamlit 
+# frontend using the external IP address provided by the LoadBalancer.
+##########

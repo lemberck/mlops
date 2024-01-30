@@ -1,0 +1,29 @@
+apiVersion: v1 # The API version defines the version of Kubernetes resources for Services.
+
+kind: Service # The kind of Kubernetes resource defined; in this case, a Service.
+
+metadata:
+  name: backend-service-clusterip # The name of the service, which will be used within Kubernetes to refer to this service.
+  namespace: sentiment-analysis-mlops # The namespace in which the service is deployed.
+
+spec: # The specification that defines the behavior of the service.
+  selector:
+    env: production-backend # The selector is a key-value pair that the service uses to find which pods to route traffic to. In this case, it's selecting pods with the label 'env: production-backend'(see backend-deployment.yaml)
+  
+  ports: # The list of ports that are exposed by this service.
+    - protocol: TCP # The protocol used for the port, which is TCP in this case. Since HTTP is being used here, TCP is the right protocol choice.
+      port: 80 # The port that the service will serve on. This is the port that is used inside the cluster to access the backend service. Port 80 is the default port for HTTP traffic.
+      targetPort: 8000 # The target port on the pod(s) to which traffic should be sent. This must match the port that the application inside the pod is listening on. ()
+  
+  type: ClusterIP # The type of service. ClusterIP exposes the service on a cluster-internal IP, making it only reachable from within the cluster (pods at the same cluster can communicate).
+
+##########
+# This service definition creates a stable endpoint for the 
+# backend pods. Any requests that come into the service on port 
+# 80 are forwarded to one of the pods matched by the selector on 
+# port 8000, the port where the FastAPI application is listening 
+# for incoming requests. 
+# The ClusterIP service will only be accessible within 
+# the Kubernetes cluster, which is sufficient since 
+# only the frontend service needs to communicate with it.
+##########

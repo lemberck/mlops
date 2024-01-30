@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
-  namespace: sentiment-analysis-service
+  namespace: sentiment-analysis-mlops
   labels:
     app: frontend-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      env: production
+      env: production-frontend
   template:
     metadata:
       labels:
-        env: production
+        env: production-frontend
     spec:
       containers:
       - name: frontend-container

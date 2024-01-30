@@ -4,7 +4,7 @@ kind: Deployment # Resource type for managing multiple replicas of a pod
 
 metadata:
   name: backend-deployment # Name of the Deployment
-  namespace: sentiment-analysis-service # Namespace where the Deployment will be created
+  namespace: sentiment-analysis-mlops # Namespace where the Deployment will be created
   labels:
     app: backend-dep # Label to associate with this Deployment
 
@@ -14,12 +14,12 @@ spec: # Specification of the Deployment
   
   selector:
     matchLabels:
-      env: production # Labels that pods must match to be considered part of this Deployment
+      env: production-backend # Labels that pods must match to be considered part of this Deployment
   
   template: # Template for the pods
     metadata:
       labels:
-        env: production # Labels to apply to each pod created by this Deployment
+        env: production-backend # Labels to apply to each pod created by this Deployment
     spec: # Specification for the pod
       containers:
       - name: backend-container # Name of the container within the pod

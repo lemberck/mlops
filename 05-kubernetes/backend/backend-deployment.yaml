@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: backend-deployment 
-  namespace: sentiment-analysis-service 
+  namespace: sentiment-analysis-mlops 
   labels:
     app: backend-dep 
 spec:
   replicas: 2
   selector:
     matchLabels:
-      env: production
+      env: production-backend
   template: 
     metadata:
       labels:
-        env: production 
+        env: production-backend 
     spec: 
       containers:
       - name: backend-container 
