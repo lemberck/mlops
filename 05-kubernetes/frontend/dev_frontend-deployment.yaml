@@ -1,0 +1,39 @@
+apiVersion: apps/v1 # Defines the API version for Deployment
+
+kind: Deployment # Specifies the kind of resource you want to create
+
+metadata:
+  name: frontend-deployment # Name of the deployment
+  namespace: sentiment-analysis-service # Namespace in which the deployment is created
+  labels:
+    app: frontend-app # Labels for the deployment
+
+spec:
+  replicas: 2 # Specifies the number of desired instances
+
+  selector:
+    matchLabels:
+      env: production # Selects the template with matching labels
+
+  template: # Template for the pods that will be created
+    metadata:
+      labels:
+        env: production # Labels for the pods to match the selector
+        
+    spec: # The specification to define the containers the pods will run
+      containers:
+      - name: frontend-container # The name of the container
+        image: lemberck/sentiment-analysis-mlops:frontend-latest # The image of the container from Docker Hub
+        ports:
+        - containerPort: 8501 # The port on which the container will listen for connections
+
+
+##########
+# This manifest will create a deployment in Kubernetes 
+# that manages two replicas of your frontend application, 
+# pulling the image from the specified repository on Docker Hub. 
+# Each pod will expose container port 8501, which is the default 
+# port for Streamlit applications. If you have configured the Streamlit 
+# app to use a different port, you should update the containerPort field 
+# accordingly.
+##########

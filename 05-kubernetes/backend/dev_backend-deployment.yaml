@@ -1,0 +1,37 @@
+apiVersion: apps/v1 # API version for Deployment
+
+kind: Deployment # Resource type for managing multiple replicas of a pod
+
+metadata:
+  name: backend-deployment # Name of the Deployment
+  namespace: sentiment-analysis-service # Namespace where the Deployment will be created
+  labels:
+    app: backend-dep # Label to associate with this Deployment
+
+spec: # Specification of the Deployment
+  
+  replicas: 2 # The desired number of pod replicas
+  
+  selector:
+    matchLabels:
+      env: production # Labels that pods must match to be considered part of this Deployment
+  
+  template: # Template for the pods
+    metadata:
+      labels:
+        env: production # Labels to apply to each pod created by this Deployment
+    spec: # Specification for the pod
+      containers:
+      - name: backend-container # Name of the container within the pod
+        image: lemberck/sentiment-analysis-mlops:backend-latest # Image to use for the container (from Docker Hub)
+        ports:
+        - containerPort: 8000 # Port that the container will listen on
+  
+  
+########
+# This manifest sets up a Kubernetes Deployment that will 
+# ensure two replicas of the backend container are running, 
+# using the image specified from Docker Hub. Each pod created 
+# by this Deployment will have the specified labels and will 
+# listen on port 8000 within the container.
+########

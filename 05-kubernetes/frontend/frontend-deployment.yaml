@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: sentiment-analysis-service
+  labels:
+    app: frontend-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      env: production
+  template:
+    metadata:
+      labels:
+        env: production
+    spec:
+      containers:
+      - name: frontend-container
+        image: lemberck/sentiment-analysis-mlops:frontend-latest
+        ports:
+        - containerPort: 8501

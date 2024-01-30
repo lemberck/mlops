@@ -43,7 +43,10 @@ Frontend : streamlit_app.py
     - `docker push lemberck/sentiment-analysis-mlops:backend-latest`
     - `docker push lemberck/sentiment-analysis-mlops:frontend-latest`
 
-###
+### Create deployment manifest (YAML file) for both frontend and backend
+- frontend-deployment.yaml 
+- backend-deployment.yaml
+- dev_... are just the commented ones
 
 
  
