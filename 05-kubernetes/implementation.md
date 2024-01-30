@@ -29,3 +29,22 @@ Frontend : streamlit_app.py
 
 `docker build -f Dockerfile-frontend -t frontend-img .`
 
+### Take images to Repository - Docker Hub
+- Create DockerHub account (if not created yet)
+- Create a repository to store the images in DockerHub
+- Login to dockerhub using the terminal : `docker login` , then username and password
+- Tag the images
+    - Format : `docker tag local-image  your-docker-username/repository-name:image` . The create tag will be `your-docker-username/repository-name:image`
+        - `docker tag backend-img lemberck/sentiment-analysis-mlops:backend-latest`
+        - `docker tag frontend-img lemberck/sentiment-analysis-mlops:frontend-latest`
+
+### Push the tagged images to Dockerhub repository (takes 5-10 min)
+- Format : `docker push created-tag`
+    - `docker push lemberck/sentiment-analysis-mlops:backend-latest`
+    - `docker push lemberck/sentiment-analysis-mlops:frontend-latest`
+
+###
+
+
+ 
+
