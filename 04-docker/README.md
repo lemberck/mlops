@@ -54,9 +54,13 @@ docker run -p 8080:8000 fastapi-poetry:latest
 ```
 
 ## Access the Applications
-- **FastAPI Docs**: `http://localhost:8080/docs`
+### **FastAPI Docs**: `http://localhost:8080/docs`
+
 ![fastdoc](https://github.com/lemberck/mlops/blob/main/04-docker/img/fast-docs.png)
-- **Streamlit UI**: `http://localhost:8501`
+
+
+### **Streamlit UI**: `http://localhost:8501`
+
 ![1](https://github.com/lemberck/mlops/blob/main/04-docker/img/streamlit1.png)
 ![2](https://github.com/lemberck/mlops/blob/main/04-docker/img/streamlit2.png)
 ![3](https://github.com/lemberck/mlops/blob/main/04-docker/img/streamlit3.png)
