@@ -56,3 +56,4 @@ docker run -p 8080:8000 fastapi-poetry:latest
 ## Access the Applications
 - **FastAPI Docs**: `http://localhost:8080/docs`
 - **Streamlit UI**: `http://localhost:8501`
+
