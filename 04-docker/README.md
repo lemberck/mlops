@@ -7,6 +7,8 @@ The application utilizes FastAPI for its high-performance backend, capable of ha
 
 Emphasizing automation, the project incorporates Docker for seamless deployment, ensuring each component operates in an isolated yet harmonized environment, facilitating both development agility and operational stability.
 
+> Note : This project integrates the Sentiment Analysis model API developed in [**this previous project**](https://github.com/lemberck/mlops/tree/main/02-fastapi)
+
 ## Features
 - **FastAPI Backend**: Robust API integrating SQLite for persistent storage, user authentication, and sentiment analysis.
 - **Streamlit Frontend**: Interactive user interface for real-time text submission and sentiment analysis results display.
