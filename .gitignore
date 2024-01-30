@@ -1,4 +1,3 @@
 __pycache__/
 database.db
-logs/
 !logs/readme.txt
