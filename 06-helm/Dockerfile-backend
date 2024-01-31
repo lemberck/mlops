@@ -1,0 +1,26 @@
+# Use a lightweight Python image
+FROM python:3.10-slim
+
+# Set the working directory to the root of the project
+WORKDIR /app
+
+# Install Poetry
+RUN pip install poetry
+
+# Copy the Poetry configuration files to the /app directory
+COPY pyproject.toml poetry.lock ./
+
+# Copy the Python FastAPI scripts to the /app directory
+COPY backend/ ./
+
+# Configure Poetry for non-interactive installation of CPU-only packages
+# Install only the backend group dependencies without the project package
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root --no-dev --no-interaction --only backend
+
+
+# Expose the port the FastAPI app runs on
+EXPOSE 8000
+
+# Run the FastAPI application using Uvicorn
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

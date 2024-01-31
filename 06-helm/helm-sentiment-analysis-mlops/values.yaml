@@ -1,0 +1,41 @@
+# values.yaml
+
+# Backend configuration - default values
+backend:
+  deployment:
+    name: backend-deployment
+    replicas: 2
+    labels:
+      env: production-backend
+    container:
+      name: backend-container
+      image: lemberck/sentiment-analysis-mlops
+      tag: backend-latest
+      port: 8000
+      imagePullPolicy: Always
+
+  service:
+    name: backend-service-clusterip
+    type: ClusterIP
+    port: 80
+    targetPort: 8000
+
+# Frontend configuration - default values
+frontend:
+  deployment:
+    name: frontend-deployment
+    replicas: 2
+    labels:
+      env: production-frontend
+    container:
+      name: frontend-container
+      image: lemberck/sentiment-analysis-mlops
+      tag: frontend-latest
+      port: 8501
+      imagePullPolicy: Always
+
+  service:
+    name: frontend-service-loadbalancer
+    type: LoadBalancer
+    port: 80
+    targetPort: 8501

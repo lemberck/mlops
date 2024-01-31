@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      env: production-frontend
+  template:
+    metadata:
+      labels:
+        env: production-frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: lemberck/sentiment-analysis-mlops:frontend-latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
