@@ -1,22 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
-  labels:
-    app: frontend-app
+  name: {{ .Values.frontend.deployment.name }}
+  labels: {{- toYaml .Values.frontend.deployment.labels | nindent 4 }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.frontend.deployment.replicas }}
   selector:
-    matchLabels:
-      env: production-frontend
+    matchLabels: {{- toYaml .Values.frontend.deployment.labels | nindent 6 }}
   template:
     metadata:
-      labels:
-        env: production-frontend
+      labels: {{- toYaml .Values.frontend.deployment.labels | nindent 8 }}
     spec:
       containers:
-      - name: frontend-container
-        image: lemberck/sentiment-analysis-mlops:frontend-latest
-        imagePullPolicy: Always
+      - name: {{ .Values.frontend.deployment.container.name }}
+        image: "{{ .Values.frontend.deployment.container.image }}:{{ .Values.frontend.deployment.container.tag }}"
+        imagePullPolicy: {{ .Values.frontend.deployment.container.imagePullPolicy }}
         ports:
-        - containerPort: 8501
+        - containerPort: {{ .Values.frontend.deployment.container.port }}

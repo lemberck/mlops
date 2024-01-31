@@ -1,22 +1,19 @@
-apiVersion: apps/v1 
-kind: Deployment 
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: backend-deployment 
-  labels:
-    app: backend-dep 
+  name: {{ .Values.backend.deployment.name }}
+  labels: {{- toYaml .Values.backend.deployment.labels | nindent 4 }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.backend.deployment.replicas }}
   selector:
-    matchLabels:
-      env: production-backend
-  template: 
+    matchLabels: {{- toYaml .Values.backend.deployment.labels | nindent 6 }}
+  template:
     metadata:
-      labels:
-        env: production-backend 
-    spec: 
+      labels: {{- toYaml .Values.backend.deployment.labels | nindent 8 }}
+    spec:
       containers:
-      - name: backend-container 
-        image: lemberck/sentiment-analysis-mlops:backend-latest
-        imagePullPolicy: Always
+      - name: {{ .Values.backend.deployment.container.name }}
+        image: "{{ .Values.backend.deployment.container.image }}:{{ .Values.backend.deployment.container.tag }}"
+        imagePullPolicy: {{ .Values.backend.deployment.container.imagePullPolicy }}
         ports:
-        - containerPort: 8000 
+        - containerPort: {{ .Values.backend.deployment.container.port }}

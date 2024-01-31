@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service-loadbalancer
+  name: {{ .Values.frontend.service.name }}
 spec:
-  selector:
-    env: production-frontend
+  selector: {{- toYaml .Values.frontend.deployment.labels | nindent 4 }}
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8501
-  type: LoadBalancer
+      port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.deployment.container.port }}
+  type: {{ .Values.frontend.service.type }}
