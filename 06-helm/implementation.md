@@ -90,10 +90,15 @@ Customize the NOTES.txt file in the Helm chart to provide specific instructions 
 
 ### Pack the Helm Chart
 - Navigate to the Helm chart is folder : `cd helm-sentiment-analysis-mlops`
-- Lint the chart to check for issues : `helm install sentiment-analysis helm-sentiment-analysis-mlops/ --namespace sentiment-analysis-mlops --create-namespace`
+- Lint the chart to check for issues : `helm lint .`
     - Note : Linter is accusing error in comments at dev_ files. Added 'dev_*' to the .helmignore
 - Go back one level : `cd ..`
 - Run the following command to package the Helm chart: `helm package helm-sentiment-analysis-mlops`
     - This generates the '.tgz' file, the packaged chart.
 
 ### Deploy the Helm Chart
+Install the chart named `sentiment-analysis` from the local directory `helm-sentiment-analysis-mlops/` into a Kubernetes namespace called `sentiment-analysis-mlops`, and if this namespace does not already exist, Helm will create it during the installation process:
+
+`helm install sentiment-analysis helm-sentiment-analysis-mlops/ --namespace sentiment-analysis-mlops --create-namespace`
+
+##### >> Follow the helm-sentiment-analysis-mlops/templates/NOTES.txt guidelines to use the app
