@@ -71,5 +71,3 @@ Frontend : streamlit_app.py
 - Apply the Services : `kubectl apply -f backend/backend-clusterip-service.yaml && kubectl apply -f frontend/frontend-loadbalancer-service.yaml`
 - Enable LoadBalancer in local env (minikube), in another terminal : `minikube tunnel`
 - Check : `kubectl get services -n sentiment-analysis-mlops`
-
-### Install HELM (if not done yet)
