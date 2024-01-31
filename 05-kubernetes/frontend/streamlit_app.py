@@ -2,8 +2,7 @@ import streamlit as st
 import requests
 
 def call_fastapi(endpoint, method='get', data=None, headers=None):
-    base_url = 'http://localhost:8000'  # FastAPI is running on this port inside the container
-    url = f'{base_url}/{endpoint}'
+    base_url = 'http://backend-clusterip-service:8000'  # Updated to the k8s service name for the backend
     if method == 'post':
         return requests.post(url, json=data, headers=headers).json()
     return requests.get(url, headers=headers).json()
