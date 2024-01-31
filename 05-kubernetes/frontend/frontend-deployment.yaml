@@ -18,5 +18,6 @@ spec:
       containers:
       - name: frontend-container
         image: lemberck/sentiment-analysis-mlops:frontend-latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8501

@@ -24,6 +24,7 @@ spec:
       containers:
       - name: frontend-container # The name of the container
         image: lemberck/sentiment-analysis-mlops:frontend-latest # The image of the container from Docker Hub
+        imagePullPolicy: Always #Pulls the latest image from DockerHub everytime.
         ports:
         - containerPort: 8501 # The port on which the container will listen for connections
 
@@ -36,4 +37,9 @@ spec:
 # port for Streamlit applications. If you have configured the Streamlit 
 # app to use a different port, you should update the containerPort field 
 # accordingly.
+# imagePullPolicy: Always --> This was done to keep the same tags. Without this, kubernetes was not
+# getting the latest image, but using the cached one without the modifications. Another
+# strategy, used in productions, is to create images with different tags each release, then 
+# change manually at the deployment the 'spec>containers>image', for more control, and then
+# run 'kubectl apply' novamente.
 ##########

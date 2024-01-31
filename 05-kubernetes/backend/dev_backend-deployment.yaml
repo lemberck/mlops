@@ -24,6 +24,7 @@ spec: # Specification of the Deployment
       containers:
       - name: backend-container # Name of the container within the pod
         image: lemberck/sentiment-analysis-mlops:backend-latest # Image to use for the container (from Docker Hub)
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000 # Port that the container will listen on
   
@@ -34,4 +35,9 @@ spec: # Specification of the Deployment
 # using the image specified from Docker Hub. Each pod created 
 # by this Deployment will have the specified labels and will 
 # listen on port 8000 within the container.
+# imagePullPolicy: Always --> This was done to keep the same tags. Without this, kubernetes was not
+# getting the latest image, but using the cached one without the modifications. Another
+# strategy, used in productions, is to create images with different tags each release, then 
+# change manually at the deployment the 'spec>containers>image', for more control, and then
+# run 'kubectl apply' novamente.
 ########

@@ -17,6 +17,7 @@ spec:
     spec: 
       containers:
       - name: backend-container 
-        image: lemberck/sentiment-analysis-mlops:backend-latest 
+        image: lemberck/sentiment-analysis-mlops:backend-latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000 
