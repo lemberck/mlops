@@ -49,3 +49,4 @@ Optionally, delete the namespace:
 ## Future Directions
 **CI/CD Integration**: Future implementations will introduce continuous integration and deployment pipelines for automated testing and deployment workflows.
 
+![Application](https://github.com/lemberck/mlops/blob/main/06-helm/img/helm-dep.png)
