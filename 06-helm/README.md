@@ -22,9 +22,36 @@ In this project, Helm is utilized to orchestrate the deployment of a pre-existin
 Through practical application, this project aims to highlight the facilitation of MLOps practices by leveraging Helm, emphasizing the significance of efficient resource management, and configuration templating in modern-day deployment strategies.
 
 
-## Components of the Application
-- **Frontend**: A Streamlit application for user interaction.
-- **Backend**: A FastAPI service for processing and sentiment analysis.
+## Project Structure
+```bash
+project
+├── backend                         # Backend application source code
+│   ├── auth.py                     # Authentication module
+│   ├── database.py                 # Database operations module
+│   ├── main.py                     # Main application entry point for FastAPI
+│   ├── models.py                   # Data models
+│   └── sentiment_analysis.py       # Sentiment analysis logic
+├── frontend                        # Frontend application source code
+│   └── streamlit_app.py            # Streamlit application script
+├── helm-sentiment-analysis-mlops   # Helm chart for the project
+│   ├── templates                   # Template files for Kubernetes objects
+│   │   ├── backend-clusterip-service.yaml       # Service definition for backend
+│   │   ├── backend-deployment.yaml              # Deployment definition for backend
+│   │   ├── frontend-deployment.yaml             # Deployment definition for frontend
+│   │   └── frontend-loadbalancer-service.yaml   # Service definition for frontend with LoadBalancer
+│   ├── .helmignore                 # Files and patterns to ignore when packaging
+│   ├── Chart.yaml                  # Chart metadata file
+│   ├── values.yaml                 # Default configuration values for the chart
+│   └── NOTES.txt                   # Notes and instructions displayed after chart installation
+├── img                             # Directory for images used in documentation or app
+├── Dockerfile-backend              # Dockerfile for building the backend image
+├── Dockerfile-frontend             # Dockerfile for building the frontend image
+├── helm-sentiment-analysis-mlops-0.1.0.tgz # Packaged Helm chart archive
+├── implementation.md               # Documentation on implementing the Helm chart
+├── poetry.lock                     # Lock file for Python dependencies (Poetry)
+├── pyproject.toml                  # Project metadata and dependencies (Poetry)
+└── README.md                       # Project README file
+```
 
 ## Deploying with Helm
 To deploy this application:
