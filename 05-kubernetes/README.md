@@ -1,20 +1,79 @@
+# Sentiment Analysis MLOps with Kubernetes
 
-For this project, it will be needed two Kubernetes Services — one for each Deployment (frontend and backend):
+## Project Overview
 
-Frontend Service: The frontend application (Streamlit) needs a Service to be accessible to users. Since this is the user interface, it is required to expose it to the public internet. This could be done through a LoadBalancer type of Service in Kubernetes, which would provision an external IP that routes to the Streamlit application.
+This repository contains a microservices-based sentiment analysis application deployed using Kubernetes. The project illustrates the application's distribution across a microservices architecture, encapsulating the backend and frontend into separate services.
 
-Backend Service: The backend application (FastAPI) needs a Service for the frontend application to communicate with it. This does not need to be exposed outside the cluster as it's only the frontend that needs to access it. A ClusterIP type of Service would suffice for this use case, as it would provide a stable internal endpoint for the frontend pods to send requests to (pod-to-pod intercluster communication)
+This project uses the results of these other MLOps projects :
+- [Sentiment Analysis Deployment via FastAPI](https://github.com/lemberck/mlops/tree/main/02-fastapi)
+- [Containerization of Sentiment Analysis for MLOps - Backend + Frontend](https://github.com/lemberck/mlops/tree/main/04-docker)
 
-In essence, the project is creating a microservices architecture where each part of the application has its own set of resources and can scale independently. This is a core principle in cloud-native application design and a foundational aspect of MLOps, focusing on modularity and scalability.
+## Architecture
 
-Frontend Service:
-- Exposed to the public (LoadBalancer).
-- Allows users to interact with the Streamlit UI.
-- Maps the user requests to the Streamlit application's pods.
+The application is divided into two primary services:
 
-Backend Service:
-- Only needs to be internal (ClusterIP).
-- Provides a stable endpoint for the Streamlit application to send API requests.
-- Ensures that requests to the FastAPI application can be load-balanced across the backend pods.
+- **Frontend Service**: A Streamlit user interface exposed to the public via a LoadBalancer. This service allows users to interact with the frontend pods directly.
+  
+- **Backend Service**: A FastAPI server accessible internally within the cluster through a ClusterIP. This service manages API requests from the frontend service, processing sentiment analysis tasks.
 
-By separating these services, the independence of the frontend and backend applications is maintained, which is a best practice in both MLOps and microservices design. It also means that each part of the application can be updated or scaled without impacting the other, improving both maintainability and availability.
+Each service is encapsulated within its deployment, ensuring modularity and independent scalability, following cloud-native application design principles.
+
+## Implementation Steps
+
+### 1. Project Setup
+Separate the application into `frontend` and `backend` directories and organize Python dependencies using Poetry.
+
+### 2. Dockerization
+Create distinct Dockerfiles for the frontend and backend, ensuring only the necessary dependencies are included for each service.
+
+### 3. Docker Hub Integration
+Build Docker images for both services and push them to a Docker Hub repository.
+
+### 4. Kubernetes Deployment
+Craft Kubernetes manifests for deployments and services. Use `kubectl` commands to apply these manifests within a dedicated namespace in the cluster.
+
+### 5. Service Exposure
+Deploy the frontend service with a LoadBalancer to expose the Streamlit UI to end-users, and set up the backend service with a ClusterIP for internal cluster communications.
+
+## Microservices Benefits
+
+- **Decoupled Architecture**: The frontend and backend are developed and deployed independently, adhering to microservices best practices.
+  
+- **Scalability**: Each microservice can be scaled based on its resource requirements and load, promoting efficient resource usage.
+
+- **Continuous Integration/Continuous Deployment (CI/CD)**: Each service can be updated and deployed individually without impacting the other, enabling smoother CI/CD pipelines.
+
+## Kubernetes Advantages
+
+- **Load Balancing**: Kubernetes manages traffic to the services, ensuring high availability and fault tolerance.
+  
+- **Service Discovery**: Services can interact with each other using DNS names, simplifying inter-service communications.
+
+- **Self-healing**: Kubernetes restarts failing containers, replaces, reschedules, and scales them when nodes die.
+
+- **Automated Rollouts/Rollbacks**: Kubernetes progressively rolls out changes to the application or its configuration, monitoring the application's health to prevent any downtime.
+
+## Prerequisites
+
+- Docker
+- Kubernetes (Minikube for local development)
+- kubectl CLI
+
+## Usage
+
+To deploy the application in your Kubernetes cluster:
+
+```bash
+minikube start
+In another terminal : `minikube tunnel`
+`kubectl apply -f create-namespace.yaml`
+`kubectl apply -f backend/backend-deployment.yaml && kubectl apply -f frontend/frontend-deployment.yaml`
+`kubectl apply -f backend/backend-clusterip-service.yaml && kubectl apply -f frontend/frontend-loadbalancer-service.yaml`
+minikube service frontend-loadbalancer-service --url
+```
+
+This sets up the entire application, creating a namespace, deploying the frontend and backend, and exposing the frontend through a LoadBalancer service.
+The last command shows the externalIP where the frontend application can be accessed.
+
+![kub-01]()
+![kub-02]()
