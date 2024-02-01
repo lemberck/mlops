@@ -1,4 +1,4 @@
-# Sentiment Analysis MLOps with Kubernetes
+# Kubernetes-Orchestrated Sentiment Analysis Microservices
 
 ## Project Overview
 
@@ -17,6 +17,34 @@ The application is divided into two primary services:
 - **Backend Service**: A FastAPI server accessible internally within the cluster through a ClusterIP. This service manages API requests from the frontend service, processing sentiment analysis tasks.
 
 Each service is encapsulated within its deployment, ensuring modularity and independent scalability, following cloud-native application design principles.
+
+## Project Structure
+```bash
+project/
+├── backend/                                    # Backend service files
+│   ├── auth.py                                 # Authentication handlers
+│   ├── backend-clusterip-service.yaml          # Service definition for the backend
+│   ├── backend-deployment.yaml                 # Deployment definition for the backend
+│   ├── database.py                             # Database connection and operations
+│   ├── dev_backend-clusterip-service.yaml      # Development version of the backend service definition
+│   ├── dev_backend-deployment.yaml             # Development version of the backend deployment definition
+│   ├── main.py                                 # FastAPI application entry point
+│   ├── models.py                               # Data models and schema definitions
+│   └── sentiment_analysis.py                   # Sentiment analysis logic
+├── frontend/                                   # Frontend service files
+│   ├── dev_frontend-deployment.yaml            # Development version of the frontend deployment definition
+│   ├── dev_frontend-loadbalancer-service.yaml  # Development version of the frontend service definition
+│   ├── frontend-deployment.yaml                # Deployment definition for the frontend
+│   ├── frontend-loadbalancer-service.yaml      # Service definition for the frontend (exposed to internet)
+│   └── streamlit_app.py                        # Streamlit application script
+│── create-namespace.yaml                       # Namespace creation manifest
+├── Dockerfile-backend                          # Dockerfile for building backend image
+├── Dockerfile-frontend                         # Dockerfile for building frontend image
+├── implementation.md                           # Documentation on implementation details
+├── poetry.lock                                 # Lock file for Python dependencies
+├── pyproject.toml                              # Python project and dependency file
+└── README.md                                   # Project README with setup and usage instructions
+```
 
 ## Implementation Steps
 
@@ -75,5 +103,5 @@ minikube service frontend-loadbalancer-service --url
 This sets up the entire application, creating a namespace, deploying the frontend and backend, and exposing the frontend through a LoadBalancer service.
 The last command shows the externalIP where the frontend application can be accessed.
 
-![kub-01]()
-![kub-02]()
+![kub-01](https://github.com/lemberck/mlops/blob/main/05-kubernetes/img/kub-01.png)
+![kub-02](https://github.com/lemberck/mlops/blob/main/05-kubernetes/img/kub-02.png)
