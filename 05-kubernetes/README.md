@@ -1,4 +1,4 @@
-# Kubernetes-Orchestrated Sentiment Analysis Microservices
+# Kubernetes-Orchestrated Sentiment Analysis Microservice
 
 ## Project Overview
 
