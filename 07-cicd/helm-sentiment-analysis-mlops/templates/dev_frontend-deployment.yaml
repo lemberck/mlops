@@ -1,0 +1,43 @@
+apiVersion: apps/v1 # Specifies the API version for Deployment resources.
+kind: Deployment # Specifies that this is a Deployment resource.
+
+metadata:
+  name: {{ .Values.frontend.deployment.name }} # Dynamically sets the deployment name from values.yaml.
+
+  # Converts labels defined in values.yaml to YAML format and indents by 4 spaces.
+  labels: {{- toYaml .Values.frontend.deployment.labels | nindent 4 }} 
+
+spec:
+  replicas: {{ .Values.frontend.deployment.replicas }} # Sets the number of replicas from values.yaml.
+
+  # Selector to match labels; converts to YAML and indents by 6 spaces.
+  selector:
+    matchLabels: {{- toYaml .Values.frontend.deployment.labels | nindent 6 }}
+
+  template:
+    metadata:
+      # For pod labels, converts to YAML and indents by 8 spaces.
+      labels: {{- toYaml .Values.frontend.deployment.labels | nindent 8 }}
+
+    spec:
+      containers:
+      - name: {{ .Values.frontend.deployment.container.name }} # Container name from values.yaml.
+        
+        # Constructs the image path by combining image repository and tag.
+        image: "{{ .Values.frontend.deployment.container.image }}:{{ .Values.frontend.deployment.container.tag }}"
+        
+        imagePullPolicy: {{ .Values.frontend.deployment.container.imagePullPolicy }} # Sets image pull policy.
+
+        ports:
+        - containerPort: {{ .Values.frontend.deployment.container.port }} # Sets the container port.
+
+##########
+# {{ ... }}: Helm template expressions for dynamic value substitution.
+
+# toYaml: Converts an object to YAML representation. Useful for structured or complex labels for readability in Helm templates.
+
+# | nindent N: Pipes toYaml output into nindent function, adding a newline and indenting the text by N spaces. 
+# The - in {{- removes whitespace before the expression.
+
+# .Values.path.to.value: Accesses values defined in the values.yaml file. The path navigates through the nested structure.
+##########

@@ -1,0 +1,46 @@
+apiVersion: apps/v1 # Specifies the API version for Deployment resources.
+kind: Deployment # Specifies that this is a Deployment resource.
+
+metadata:
+  name: {{ .Values.backend.deployment.name }} # Dynamically sets the deployment name from values.yaml.
+
+  # Converts labels defined in values.yaml to YAML format and indents by 4 spaces.
+  labels: {{- toYaml .Values.backend.deployment.labels | nindent 4 }} 
+
+spec:
+  replicas: {{ .Values.backend.deployment.replicas }} # Sets the number of replicas from values.yaml.
+
+  # Selector to match labels; converts to YAML and indents by 6 spaces.
+  selector:
+    matchLabels: {{- toYaml .Values.backend.deployment.labels | nindent 6 }}
+
+  template:
+    metadata:
+      # For pod labels, converts to YAML and indents by 8 spaces.
+      labels: {{- toYaml .Values.backend.deployment.labels | nindent 8 }}
+
+    spec:
+      containers:
+      - name: {{ .Values.backend.deployment.container.name }} # Container name from values.yaml.
+        
+        # Constructs the image path by combining image repository and tag.
+        image: "{{ .Values.backend.deployment.container.image }}:{{ .Values.backend.deployment.container.tag }}"
+        
+        imagePullPolicy: {{ .Values.backend.deployment.container.imagePullPolicy }} # Sets image pull policy.
+
+        ports:
+        - containerPort: {{ .Values.backend.deployment.container.port }} # Sets the container port.
+
+##########
+# {{ ... }}: This is the syntax for Helm template expressions, which allows dynamic value substitution.
+
+# toYaml: This function converts a given object to its YAML representation. Use the toYaml function when 
+# your labels are structured or complex, and when you want to maintain readability and manageability in  Helm templates. 
+# For simple, single key-value pair labels, a direct assignment without toYaml may suffice.
+
+# | nindent N: Pipes the output of toYaml into the nindent function, which adds a newline and then indents the text by N spaces. 
+# The - in {{- removes any whitespace before the expression.
+
+# .Values.path.to.value: This syntax is used to access values defined in the values.yaml file. The path navigates through 
+# the nested structure of the values.yaml file.
+##########

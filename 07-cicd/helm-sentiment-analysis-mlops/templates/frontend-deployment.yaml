@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.deployment.name }}
+  labels: {{- toYaml .Values.frontend.deployment.labels | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.deployment.replicas }}
+  selector:
+    matchLabels: {{- toYaml .Values.frontend.deployment.labels | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- toYaml .Values.frontend.deployment.labels | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.frontend.deployment.container.name }}
+        image: "{{ .Values.frontend.deployment.container.image }}:{{ .Values.frontend.deployment.container.tag }}"
+        imagePullPolicy: {{ .Values.frontend.deployment.container.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend.deployment.container.port }}

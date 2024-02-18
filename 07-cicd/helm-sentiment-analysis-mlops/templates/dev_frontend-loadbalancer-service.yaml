@@ -1,0 +1,27 @@
+apiVersion: v1 # Specifies the API version for Service resources.
+kind: Service # Specifies that this is a Service resource.
+
+metadata:
+  name: {{ .Values.frontend.service.name }} # Dynamically sets the service name from values.yaml.
+
+spec:
+  # Selector to match labels; converts to YAML and indents by 4 spaces.
+  selector: {{- toYaml .Values.frontend.deployment.labels | nindent 4 }}
+
+  ports:
+    - protocol: TCP # Specifies the protocol for the port. TCP is used for HTTP/HTTPS traffic.
+      port: {{ .Values.frontend.service.port }} # The port on which the service is exposed.
+      targetPort: {{ .Values.frontend.deployment.container.port }} # The port on the pod targeted by the service.
+  
+  type: {{ .Values.frontend.service.type }} # Sets the type of service (e.g., LoadBalancer).
+
+##########
+# {{ ... }}: Helm template expressions for dynamic value substitution.
+
+# toYaml: Converts the given object to its YAML representation. Used here to convert labels from values.yaml to YAML.
+
+# | nindent N: Pipes the output of toYaml into the nindent function, which adds a newline and then indents the text by N spaces. 
+# The - in {{- removes any whitespace before the expression.
+
+# .Values.path.to.value: Accesses values defined in the values.yaml file, navigating through its nested structure.
+##########

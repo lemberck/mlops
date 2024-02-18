@@ -1,0 +1,27 @@
+Thank you for installing helm-sentiment-analysis-mlops!
+
+Your application is now deployed and should be up and running.
+
+To interact with the deployed frontend service from outside the cluster:
+
+1. For minikube, ensure the minikube tunnel is running in another terminal:
+
+minikube tunnel
+
+2. Then, you can access the frontend service in your browser via the external IP provided by the LoadBalancer:
+
+minikube service frontend-service-loadbalancer -n sentiment-analysis-mlops
+
+>>> Note : Please be aware that the service requires approximately 15-30 SECONDS to finalize the setup for both the frontend and backend.
+
+3. To uninstall and delete a release in Helm, run the command below, which will remove all the Kubernetes components associated with the chart and delete the release:
+
+helm uninstall sentiment-analysis --namespace sentiment-analysis-mlops
+
+4. Delete the created namespace
+
+kubectl delete namespace sentiment-analysis-mlops
+
+Enjoy!
+
+
