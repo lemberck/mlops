@@ -1,0 +1,56 @@
+name: CI - Lint, Build, and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'  # Ignores only .md changes
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'  # Ignores only .md changes
+  workflow_dispatch:  # Adds a manual trigger for the workflow
+
+jobs:
+  CI_lint-build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies with Poetry
+        run: |
+          pip install poetry
+          poetry install --no-root
+
+      - name: Run Flake8
+        run: poetry run flake8 .
+
+      - name: Run Pylint
+        run: |
+          score=$(poetry run pylint **/*.py --exit-zero --fail-under=9 | grep "Your code has been rated at" | awk '{print substr($7, 1, index($7, "/") - 1)}')
+          echo "Pylint score: $score"
+          python -c "import sys; sys.exit(0 if float('$score') >= 9 else 1)"
+
+      - name: Build backend Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-backend:${{ github.sha }} -f Dockerfile-backend .
+
+      - name: Build frontend Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-frontend:${{ github.sha }} -f Dockerfile-frontend .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Push backend Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-backend:${{ github.sha }}
+
+      - name: Push frontend Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-frontend:${{ github.sha }}

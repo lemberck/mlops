@@ -1,5 +1,9 @@
 # Implementation
 
+
+# CI Pipeline
+Responsible for linters, unit tests, integration tests, building the docker image of services and take them to registry service.
+
 ## Add linters to poetry
 - Start poetry env : `poetry shell`
 - Add linters to dev env only : `poetry add --group dev pylint flake8`
@@ -23,6 +27,8 @@ It is considered easier to integrate into a CI/CD pipeline due to its speed and 
 > The score can be used to **automate the linting process in the CI pipeline**, by setting a minimun score that must be met for the build to pass.
 
 > You can add a **.pylintrc** file to customize the rules to fit the project's guidelines
+
+NOTE : If facing an error `[Errno 13] Permission denied: b'/var/lib/docker/overlay2/b23cb536bf8b0ccc4a0f6570ea820a95d6d22a6ca1212b1f104b0fd58077c487/diff/opt/kafka_2.12-2.3.0/bin/...` , run `poetry update`
 
 #### --- After running the linters, solve the issues manually.
 
@@ -69,57 +75,111 @@ Pre-commit is used to automate the enforcement of code style instead of just rep
     git commit -m "Add pre-commit hooks for flake8 and pylint"
     ```
 
-## CI/CD Workflow with GitHub Actions
+## CI Workflow with GitHub Actions
   1 - Create the workflow directory at the root of the  project : `mkdir -p .github/workflows`
 
-  2 - Create Workflow File for the linters : `touch .github/workflows/python-lint.yml`
+  2 - Create Workflow File for the linters : `touch .github/workflows/ci_python-lint.yml`
 
-  3 - Edit the yml file : `code .github/workflows/python-lint.yml` [VSCode]
+  3 - Edit the yml file : `code .github/workflows/ci_python-lint.yml` [VSCode]
   ```bash
-  #Name of the GitHub Actions workflow. Shows in the GH UI when the action runs.
-  name: Lint Python Code 
+  name: CI - Lint, Build, and Push Docker Images
 
-# The events that trigger the workflow. In this case, the workflow runs on push events and pull_request events targeting the main branch.
+# Triggers the workflow on push to the main branch and pull requests to the main branch,
+# but ignores changes that only affect markdown files to prevent unnecessary runs.
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # Adds a manual trigger for the workflow
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:  # Allows the workflow to be manually triggered.
 
-# Defines a job named lint. Jobs are a set of steps that execute on the same runner.
 jobs:
-  lint:
+  CI_lint-build-push:
+    runs-on: ubuntu-latest  # The job will run on the latest Ubuntu virtual environment provided by GitHub.
 
-  # Type of runner that the job will run on. Here, it uses the latest version of Ubuntu provided by GitHub Actions.
-    runs-on: ubuntu-latest
-
-  #  List of steps to be executed as part of the job. Each step can run commands or actions.
     steps:
-    - name: Check out repository code
-    # Action to check out the repository code so it can be used by the workflow. Necessary to access the repository's contents.
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-    # Action to set up a specific version of Python. Allows next steps to run Python commands.
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+      # Retrieves the code from the repository so that it can be built and tested.
+      - name: Check out repository code
+        uses: actions/checkout@v2
 
-    - name: Install dependencies with Poetry
-    # Installs Poetry using pip then uses it to install only the project's dependencies as defined in pyproject.toml.
-      run: |
-        pip install poetry
-        poetry install --no-root
+      # Python is set up for the job since the project is Python-based,
+      # and linting tools Flake8 and Pylint require a Python environment.
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
 
-    - name: Run Flake8
-    # Runs Flake8 to check for style violations and coding errors in all the project.
-      run: poetry run flake8 .
+      # Poetry is used for dependency management to ensure consistent environments,
+      # which is essential for reproducible builds and tests.
+      - name: Install dependencies with Poetry
+        run: |
+          pip install poetry
+          poetry install --no-root
 
-    - name: Run Pylint
-    # Runs Pylint on all Python files in the project. Ensures the command exits with a success status even if issues are found, then extracts, prints the Pylint score, and checks if it meets a minimum score of 9, failing otherwise.
-      run: |
-        score=$(poetry run pylint **/*.py --exit-zero --fail-under=9 | grep "Your code has been rated at" | awk '{print $7}')
-        echo "Pylint score: $score"
-        [[ $(echo "$score >= 9" | bc -l) -eq 1 ]]
+      # Runs Flake8 for style guide enforcement, catching errors like missing imports or undeclared variables.
+      - name: Run Flake8
+        run: poetry run flake8 .
+
+      # Runs Pylint to assess code quality, using a score to fail the workflow if the code doesn't meet quality thresholds (>=9.0)
+      # This ensures that only high-quality code is integrated and deployed.
+      - name: Run Pylint
+        run: |
+          score=$(poetry run pylint **/*.py --exit-zero --fail-under=9 | grep "Your code has been rated at" | awk '{print substr($7, 1, index($7, "/") - 1)}')
+          echo "Pylint score: $score"
+          python -c "import sys; sys.exit(0 if float('$score') >= 9 else 1)"
+
+      # Docker images for the backend and frontend services are built with the current commit SHA as a tag.
+      # Using the SHA ensures that each image is uniquely tagged with the state of the code that produced it,
+      # which is crucial for traceability and rollback in case issues are discovered in production.
+      - name: Build backend Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-backend:${{ github.sha }} -f Dockerfile-backend .
+
+      - name: Build frontend Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-frontend:${{ github.sha }} -f Dockerfile-frontend .
+
+      # Docker Hub credentials are stored as GH secrets to securely log in to the Docker Hub registry
+      # so that the images can be pushed without exposing sensitive information.
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      # Pushes the uniquely tagged images to Docker Hub, ready to be pulled down and deployed.
+      # This step is critical for the Continuous Deployment (CD) process that follows.
+      - name: Push backend Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-backend:${{ github.sha }}
+
+      - name: Push frontend Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ vars.PROJECT_NAME }}-frontend:${{ github.sha }}
+
+  ```
+  4- [DockerHub] Create a DockerHub Access Token : **DockerHub > My Account >Security > New Access Token**
+  -  Copy the access token that is generated. This token will be used as a password in GitHub Actions. It is shown only once.
+
+  5 - [For sensitive data] Add Secrets to the Project's GitHub Repository to store he DH credentials : **Settings > Secrets and variables > Actions > New Repository Secret**
+  - Add a new secret `DOCKER_HUB_USERNAME` with value equals to your DH username.
+  - Add a new secret `DOCKER_HUB_ACCESS_TOKEN` with value equals to the DH access token created on step 4
+
+  6 - [For NOT sensitive data] Add Variables to the Project's GitHub Repository to store the Project name for the image tagging: **Settings > Secrets and variables > Actions > Variables tab > New Repository variable**
+  - Add a new variable `PROJECT_NAME` with value equals to 'mlops-sentiment_analysis'
+
+  7 - Commit the CI workflow creation
+  > NOTE: In order to GitHub Actions recognize workflow files, they must be located in the .github/workflows directory at the root of the project. 
+  To enable testing, the **07-cicd/ directory has been committed to its own separate remote repository**. The workflow file within 07-cicd/ inside the mlops remote repository will not trigger GitHub Actions workflows; it serves purely to consolidate related mlops project materials.
+
+  8 - Go to GH repo > Actions . The workflow must be at the Workflow section on the left. It is possible to trigger it manually (it was configured as such) and it will triggers automatically everytime there is a push or pull request to the main branch.
+
+  # CD pipeline
+  Responsible for pulling the images from registry and deploying the services, if CI pipeline succeeds.
+
+  ## CD Workflow with Github Actions
+  1 - Create Workflow File for the cd pipeline : `touch .github/workflows/cd_pull-deploy.yml`
+  2 - Edit the yml file : `code .github/workflows/cd_pull-deploy.yml` [VSCode]
+  ```bash
+
   ```
