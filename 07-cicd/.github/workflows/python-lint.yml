@@ -1,0 +1,33 @@
+name: Lint Python Code
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies with Poetry
+        run: |
+          pip install poetry
+          poetry install --no-root
+
+      - name: Run Flake8
+        run: poetry run flake8 .
+
+      - name: Run Pylint
+        run: |
+          score=$(poetry run pylint **/*.py --exit-zero --fail-under=9 | grep "Your code has been rated at" | awk '{print $7}')
+          echo "Pylint score: $score"
+          [[ $(echo "$score >= 9" | bc -l) -eq 1 ]]

@@ -1,104 +1,124 @@
-## Implementation
+# Implementation
 
-### Install HELM (if not done yet)
+## Add linters to poetry
+- Start poetry env : `poetry shell`
+- Add linters to dev env only : `poetry add --group dev pylint flake8`
+- Install dependecies to the env : `poetry install --no-root`
+
+### Run the linters for the python scripts
+- **Flake8** : Returns a list of issues that it finds according to its rules. 
+It is considered easier to integrate into a CI/CD pipeline due to its speed and simplicity.
+    - Run for specific script : `poetry run flake8 path/to/python/scripts`
+    - Run for all script in the project : `poetry run flake8 .`
+
+> To **automate code checks with flake8 in a CI pipeline**, simply add it as a step in your workflow configuration. If flake8 reports any errors, the CI pipeline will fail, as it exits with a non-zero status upon finding linting violations.
+
+> You can also configure flake8 using a **.flake8** file in your repository to customize the rules to fit the  project's guidelines. For example, you could ignore certain warnings or errors, exclude files, or adjust the maximum line length.
+
+-----------------------------------------
+
+- **Pylint** : It also provides a numerical score (up to 10) . pIt can be slower because it performs a full static analysis of the code, but has more checks than flake8. 
+    - Run for specific script : `poetry run pylint path/to/python/scripts`
+    - Run for all script in the project : `poetry run pylint folder_name/`
+> The score can be used to **automate the linting process in the CI pipeline**, by setting a minimun score that must be met for the build to pass.
+
+> You can add a **.pylintrc** file to customize the rules to fit the project's guidelines
+
+#### --- After running the linters, solve the issues manually.
+
+
+## Add unit tests [Not working yet, skip]
+- Add test package to dev env only : `poetry add --group dev pytest pytest-asyncio`
+- Create a test directory : `mkdir -p tests/backend tests/frontend`
+- Create 'pytest.ini' at the root of the project, to show pytest to look for modules inside backend/ and frontend/ : `touch pyproject.ini`
+  - https://pytest-with-eric.com/introduction/pytest-pythonpath/ 
+```bash
+[pytest]  
+pythonpath = backend frontend
 ```
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 
-sudo apt-get install apt-transport-https --yes
-
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-
-sudo apt-get update
-
-sudo apt-get install helm
-
-helm version
-```
-
-### Get the repository from previous project
-- https://github.com/lemberck/mlops/tree/main/05-kubernetes
-
-### Create the Helm Chart
----> A Helm chart is a collection of files that describe a related set of Kubernetes resources. 
-
-`helm create helm-sentiment-analysis-mlops`
-
-> This will create a directory called 'helm-sentiment-analysis-mlops' with the structure needed for a chart.
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# Helm Chart Structure
-
-When initializing a new Helm chart with `helm create <chart-name>`, 
-Helm generates a set of default files and directories to provide a template for the application's deployment. 
-However, not all files may be needed.
-
-## Default Files and Directories:
-
-### `templates/` Directory
-- Contains the YAML templates for the Kubernetes resources.
-- **`deployment.yaml`**: Template for creating a deployment. Modify as needed or delete it and use a customized manifest.
-- **`service.yaml`**: Template for creating a service. Modify as needed or delete it and use a customized manifest..
-- **`serviceaccount.yaml`**: Remove if the application doesn't require a Kubernetes ServiceAccount.
-- **`hpa.yaml`**: For a Horizontal Pod Autoscaler, if required to enable automatic scaling. Remove if no autoscaling needed.
-- **`ingress.yaml`**: For Ingress resources, if  setting up Ingress for the services. 
-    --> An API object that manages external access to the services in a cluster. It provides HTTP routing based on defined rules and can act as a load balancer, SSL termination, and name-based virtual hosting.
-### `tests/` Directory
-- Contains tests to validate that the chart works as expected after installation.
-### `values.yaml`
-- Contains the default values for the chart's templates. Update with the application's configuration.
-### `Chart.yaml`
-- Metadata about the chart, like version, name, and description.
-### `NOTES.txt`
-- Instructions or information displayed post-installation.
-### `_helpers.tpl`
-- Template helpers for defining common labels and template functions.
-
-### Development-Specific Files
-- Any files prefixed with `dev_` are for development-specific configurations and aren't part of the default structure.
-
-## Managing the Chart:
-
-- **Keep Only What's Needed**: Delete default files that aren't applicable to your application, like `serviceaccount.yaml`, `hpa.yaml`, `ingress.yaml`, unless they're needed.
-- **Lint the Chart**: Use `helm lint` to check for issues.
-- **Test in Development**: Ensure thr configurations are correct by testing in a dev environment.
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- Create tests for all scrips (the must start with 'test_') : `touch tests/backend/test_auth.py tests/backend/test_database.py tests/backend/test_models.py tests/backend/test_sentiment_analysis.py tests/frontend/test_streamlit_app.py`
 
 
-### Delete unnecessary files for the project form the chart
-Ingress (ingress.yaml), Horizontal Pod Autoscaler (hpa.yaml), Connection Tests (test-connection.yaml), Service Account (serviceaccount.yaml), Generic Service Template (service.yaml), Template Helpers (_helpers.tpl).
+## Add pre-commit (for future commits) [Not working yet, skip] 
+Pre-commit is used to automate the enforcement of code style instead of just reporting. The framework can be set up to run the chosen linters automatically on every commit. With this, every time there is a commit, pre-commit will run the linters on the changed files. If there are any issues detected by the linters, the commit will be blocked until those issues are resolved. This helps to ensure that you maintain a high code quality.
+- Add pre-commit as a Development Dependency: `poetry add --group dev pre-commit`
+- Create the pre-commit Configuration File: 
+    - Create a file named .pre-commit-config.yaml with the following content to configure pre-commit to run flake8 and pylint: 
+    ```bash 
+    repos:
+  - repo: https://github.com/pycqa/flake8
+    rev: ''  # Use the desired version of flake8
+    hooks:
+      - id: flake8
 
-### Move the manifests to the created chart
-- Move `frontend-deployment.yaml` , `backend-deployment.yaml` , `frontend-loadbalancer-service.yaml` and `backend-clusterip-service.yaml` to **helm-sentiment-analysis-mlops/templates/**
+  - repo: https://github.com/pycqa/pylint
+    rev: ''  # Use the desired version of pylint
+    hooks:
+      - id: pylint
+        additional_dependencies: ['pylint']
+    ```
+    **Note** : To check the installed versions of flake8 and pylint : `poetry show | grep -E "flake8|pylint"`
 
-### Remove 'namespace' fields from the manifests
-When using Helm to manage the deployments, it's better not to hardcode the namespace in the manifest files. 
+- Install the pre-commit Hook: `poetry run pre-commit install`
+- Run pre-commit Against All Files (Optional - Recommended): `poetry run pre-commit run --all-files`
+- Commit The Changes:
+    - Add the .pre-commit-config.yaml and any changes to pyproject.toml to your repository and commit them:
+    ```bash
+    git add .pre-commit-config.yaml pyproject.toml
+    git commit -m "Add pre-commit hooks for flake8 and pylint"
+    ```
 
-Helm has a built-in template function to handle namespaces, which allows to dynamically set the namespace during installation or upgrade of the chart.
+## CI/CD Workflow with GitHub Actions
+  1 - Create the workflow directory at the root of the  project : `mkdir -p .github/workflows`
 
-- Delete the `create-namespace.yaml` (not needed anymore)
-- Remove the `namespace` field from the metadata section in the YAML files moved in the previous section.
+  2 - Create Workflow File for the linters : `touch .github/workflows/python-lint.yml`
 
-### Modify the Helm Chart Values
-Inside `helm-sentiment-analysis-mlops`, there is a `values.yaml` file. This is where default values can be defined for the templates, which can be overridden during installation if necessary, allowing more flexibility and easy configuration for the chart when deploying into different environments or updates.
+  3 - Edit the yml file : `code .github/workflows/python-lint.yml` [VSCode]
+  ```bash
+  #Name of the GitHub Actions workflow. Shows in the GH UI when the action runs.
+  name: Lint Python Code 
 
-### Modify the templates in the Helm chart to use the defined values
-Replace the static values in `frontend-deployment.yaml`, `backend-deployment.yaml`, `frontend-loadbalancer-service.yaml`, and `backend-clusterip-service.yaml` with template placeholders that reference the default values specified in `values.yaml`.
+# The events that trigger the workflow. In this case, the workflow runs on push events and pull_request events targeting the main branch.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-### Modify the NOTES.txt from the chart
-Customize the NOTES.txt file in the Helm chart to provide specific instructions or messages that will be displayed to the user after deploying the chart. Since some default files were deleted and certain values have not been parameterized, the original NOTES.txt may reference resources or values that no longer exist or are relevant. Update the NOTES.txt to reflect the current state of the chart and provide any necessary post-installation steps or information relevant to the application.
+# Defines a job named lint. Jobs are a set of steps that execute on the same runner.
+jobs:
+  lint:
 
-### Pack the Helm Chart
-- Navigate to the Helm chart is folder : `cd helm-sentiment-analysis-mlops`
-- Lint the chart to check for issues : `helm lint .`
-    - Note : Linter is accusing error in comments at dev_ files. Added 'dev_*' to the .helmignore
-- Go back one level : `cd ..`
-- Run the following command to package the Helm chart: `helm package helm-sentiment-analysis-mlops`
-    - This generates the '.tgz' file, the packaged chart.
+  # Type of runner that the job will run on. Here, it uses the latest version of Ubuntu provided by GitHub Actions.
+    runs-on: ubuntu-latest
 
-### Deploy the Helm Chart
-Install the chart named `sentiment-analysis` from the local directory `helm-sentiment-analysis-mlops/` into a Kubernetes namespace called `sentiment-analysis-mlops`, and if this namespace does not already exist, Helm will create it during the installation process:
+  #  List of steps to be executed as part of the job. Each step can run commands or actions.
+    steps:
+    - name: Check out repository code
+    # Action to check out the repository code so it can be used by the workflow. Necessary to access the repository's contents.
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+    # Action to set up a specific version of Python. Allows next steps to run Python commands.
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
 
-`helm install sentiment-analysis helm-sentiment-analysis-mlops/ --namespace sentiment-analysis-mlops --create-namespace`
+    - name: Install dependencies with Poetry
+    # Installs Poetry using pip then uses it to install only the project's dependencies as defined in pyproject.toml.
+      run: |
+        pip install poetry
+        poetry install --no-root
 
-##### >> Follow the helm-sentiment-analysis-mlops/templates/NOTES.txt guidelines to use the app
+    - name: Run Flake8
+    # Runs Flake8 to check for style violations and coding errors in all the project.
+      run: poetry run flake8 .
+
+    - name: Run Pylint
+    # Runs Pylint on all Python files in the project. Ensures the command exits with a success status even if issues are found, then extracts, prints the Pylint score, and checks if it meets a minimum score of 9, failing otherwise.
+      run: |
+        score=$(poetry run pylint **/*.py --exit-zero --fail-under=9 | grep "Your code has been rated at" | awk '{print $7}')
+        echo "Pylint score: $score"
+        [[ $(echo "$score >= 9" | bc -l) -eq 1 ]]
+  ```
