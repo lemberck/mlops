@@ -179,7 +179,9 @@ jobs:
 
   ## CD Workflow with Github Actions
   1 - Create Workflow File for the cd pipeline : `touch .github/workflows/cd_pull-deploy.yml`
+
   2 - Edit the yml file : `code .github/workflows/cd_pull-deploy.yml` [VSCode]
+  
   ```bash
 
   ```
