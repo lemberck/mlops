@@ -85,6 +85,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # Adds a manual trigger for the workflow
 
 # Defines a job named lint. Jobs are a set of steps that execute on the same runner.
 jobs:
