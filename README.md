@@ -1,15 +1,21 @@
 
+# MLOps-Driven Text Sentiment Analysis Platform
+
+## Overview
+This platform is designed to leverage the latest in MLOps practices to provide an end-to-end text sentiment analysis service. It incorporates advanced NLP models through HuggingFace's Transformers, offering a comprehensive solution from user authentication to sentiment analysis, all deployed within a robust, scalable MLOps architecture.
+
+
 ## Features
-- **Sentiment Analysis**: Utilize HuggingFace's transformers for cutting-edge sentiment analysis.(:heavy_check_mark:)
-- **Secure User Authentication**: Ensure secure access with a dedicated authentication service. (:heavy_check_mark:)
-- **Interactive UI**: Engage with the service through a Streamlit-based frontend. (:heavy_check_mark:)
-- **Containerization**: Leverage Docker and DockerHub for consistent deployment across environments. (:heavy_check_mark:)
-- **Scalable Deployment**: Utilize Kubernetes and Helm for scalable, manageable deployment processes. (:heavy_check_mark:)
-- **Continuous Integration and Delivery**: Automate workflows with GitHub Actions for code quality checking , seamless integration and delivery. (:running:)
+- **Sentiment Analysis**: Utilize HuggingFace's transformers for cutting-edge sentiment analysis.(OK)
+- **Secure User Authentication**: Ensure secure access with a dedicated authentication service. (OK)
+- **Interactive UI**: Engage with the service through a Streamlit-based frontend. (OK)
+- **Containerization**: Leverage Docker and DockerHub for consistent deployment across environments. (OK)
+- **Scalable Deployment**: Utilize Kubernetes and Helm for scalable, manageable deployment processes. (OK)
+- **Continuous Integration and Delivery**: Automate workflows with GitHub Actions for code quality checking , seamless integration and delivery. **(WIP)**
 - **Managed Kubernetes**: Deploy on Google Kubernetes Engine for robust, scalable cloud infrastructure.
 
-## Technologies Used
-- **HuggingFace's Transformers**
+## Tech Stack
+- **HuggingFace's Transformers Pipeline**
 - **FastAPI**
 - **Streamlit**
 - **Docker + DockerHub**
