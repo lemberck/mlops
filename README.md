@@ -15,6 +15,7 @@ This platform is designed to leverage the latest in MLOps practices to provide a
 - **Managed Kubernetes**: Deploy on Google Kubernetes Engine for robust, scalable cloud infrastructure.
 
 ## Tech Stack
+- **Poetry + Justfiles**
 - **HuggingFace's Transformers Pipeline**
 - **FastAPI**
 - **Streamlit**
